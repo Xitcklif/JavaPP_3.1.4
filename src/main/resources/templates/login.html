@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+</head>
+<body>
+<div sec:authorize="isAuthenticated()">
+	<% response.sendRedirect("/"); %>
+</div>
+<h1>Log in your account</h1>
+<form th:method="POST" th:action="@{/login}">
+    <input style="font-size:18px" type="text" placeholder="Username"/>
+    <p/>
+    <input style="font-size:18px" type="password" placeholder="Password"/>
+    <p/>
+    <input style="font-size:18px" type="submit" value="Login"/>
+</form>
+
+<a th:href="@{/regist}"><button style="font-size:18px">Registration</button></a>
+<p/>
+<a th:href="@{/}"><button style="font-size:18px">Home</button></a>
+</body>
+</html>

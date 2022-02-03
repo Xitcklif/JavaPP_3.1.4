@@ -1,32 +1,33 @@
 package ru.kata.spring.boot_security.demo.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import javax.annotation.PostConstruct;
 
 @Component
 public class StartInit {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
 
-    public StartInit(UserService userService) {
+    public StartInit(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostConstruct
-    private void createRoot() {
+    public void createRoot() {
         User root = new User("root", "root", "root");
-//        Role user = new Role("ROLE_USER");
-//        Role admin = new Role("ROLE_ADMIN");
-//
-//        userService.addRoleToTable(user);
-//        userService.addRoleToTable(admin);
+        Role user = new Role("ROLE_USER");
+        Role admin = new Role("ROLE_ADMIN");
 
-        userService.save(root);
-//        userService.setAdminRole(root);
+        roleService.addRoleToTable(user);
+        roleService.addRoleToTable(admin);
+        userService.saveAsAdmin(root);
     }
 }

@@ -19,7 +19,7 @@
 </div>
 <div sec:authorize="isAuthenticated()">
 	<h3><span sec:authentication="name">Username</span></h3>
-	<a th:href="@{/}">
+	<a th:href="@{/logout}">
 		<button style="font-size:18px">Log out</button>
 	</a>
 </div>

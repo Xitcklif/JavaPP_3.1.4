@@ -7,16 +7,16 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "Roles")
+@Table(name = "RolesTable")
 public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String roleName;
+    private String name;
 
     @Transient
-    @ManyToMany
+    @ManyToMany(mappedBy = "roles")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
             org.hibernate.annotations.CascadeType.MERGE,
             org.hibernate.annotations.CascadeType.PERSIST})
@@ -24,13 +24,13 @@ public class Role implements GrantedAuthority {
 
     public Role() {}
 
-    public Role(String roleName) {
-        this.roleName = roleName;
+    public Role(String name) {
+        this.name = name;
     }
 
-    public Role(Long id, String roleName) {
+    public Role(Long id, String name) {
         this.id = id;
-        this.roleName = roleName;
+        this.name = name;
     }
 
     public Long getId() {
@@ -41,12 +41,12 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String name) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = this.name;
     }
 
     public Set<User> getUsers() {
@@ -59,6 +59,11 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return getRoleName();
+        return getName();
+    }
+
+    @Override
+    public String toString() {
+        return "'" + name + "'";
     }
 }

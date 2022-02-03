@@ -12,11 +12,11 @@
 </div>
 <h1>Log in your account</h1>
 <form th:method="POST" th:action="@{/login}">
-    <input style="font-size:18px" type="text" placeholder="Username"/>
+    <input style="font-size:18px" type="text" placeholder="Username" th:name="username"/>
     <p/>
-    <input style="font-size:18px" type="password" placeholder="Password"/>
+    <input style="font-size:18px" type="password" placeholder="Password" th:name="password"/>
     <p/>
-    <input style="font-size:18px" type="submit" value="Login"/>
+    <input th:href="@{/}" style="font-size:18px" type="submit" value="Login"/>
 </form>
 
 <a th:href="@{/regist}"><button style="font-size:18px">Registration</button></a>

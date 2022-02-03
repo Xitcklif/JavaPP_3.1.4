@@ -42,6 +42,6 @@ public class RegistController {
             model.addAttribute("usernameErr", "This username is already used");
             return "regist";
         }
-        return "redirect:/";
+        return "login";
     }
 }

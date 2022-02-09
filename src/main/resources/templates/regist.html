@@ -9,7 +9,7 @@
 <body>
 <h1>Registration new user</h1>
 <form th:method="POST" th:action="@{/regist}" th:object="${user}">
-    <input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username" id="usernameErr"/>
+    <input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username" id="usernameErr" th:autofocus/>
     <lable style="font-size:18px" for="usernameErr" th:utext="${usernameErr}"></lable>
     <p/>
     <input style="font-size:18px" type="password" th:field="*{password}" placeholder="Password" id="pass"/>

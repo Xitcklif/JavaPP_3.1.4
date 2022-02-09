@@ -4,33 +4,45 @@
       xmlns:style="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>UserList</title>
+	<meta charset="UTF-8">
+	<title>UserList</title>
 </head>
 <body>
 <div>
-    <table th:border="1">
-        <tr>
-            <th style="font-size:18px">Id</th>
-            <th style="font-size:18px">Username</th>
-            <th style="font-size:18px">Password</th>
-            <th style="font-size:18px">Roles</th>
-            <th style="font-size:18px">Delete</th>
-        </tr>
-        <tr th:each="user : ${users}">
-            <td style="font-size:18px" th:utext="${user.getId()}"></td>
-            <td style="font-size:18px" th:utext="${user.getUsername()}"></td>
-            <td style="font-size:18px" th:utext="${user.getPassword()}"></td>
-            <td style="font-size:18px" th:utext="${user.getRoles()}"></td>
-            <td style="font-size:18px">
-                <form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}">
-                    <button style="font-size:18px;background:white">Delete</button>
-                </form>
-            </td>
-        </tr>
-    </table>
-    <p/>
-    <a th:href="@{/}"><button style="font-size:18px">Home</button></a>
+	<table th:border="1">
+		<tr>
+			<th style="font-size:18px">Id</th>
+			<th style="font-size:18px">Username</th>
+			<th style="font-size:18px">Password</th>
+			<th style="font-size:18px">Roles</th>
+			<th style="font-size:18px">Edit</th>
+			<th style="font-size:18px">Delete</th>
+		</tr>
+		<tr th:each="user : ${users}">
+			<td style="font-size:18px" th:utext="${user.getId()}"></td>
+			<td style="font-size:18px" th:utext="${user.getUsername()}"></td>
+			<td style="font-size:18px" th:utext="${user.getPassword()}"></td>
+			<td style="font-size:18px" th:utext="${user.getRoles()}"></td>
+			<td style="font-size:18px">
+				<a th:href="@{/admin/edit/{id}(id=${user.getId()})}">
+					<button style="font-size:18px;background:white">Edit</button>
+				</a>
+			</td>
+			<td style="font-size:18px">
+				<form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}">
+					<button style="font-size:18px;background:white">Delete</button>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<p/>
+	<a th:href="@{/admin/new}">
+		<button style="font-size:18px">New user</button>
+	</a>
+	<p/>
+	<a th:href="@{/}">
+		<button style="font-size:18px">Home</button>
+	</a>
 </div>
 </body>
 </html>

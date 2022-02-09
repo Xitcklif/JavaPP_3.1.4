@@ -21,12 +21,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository ur;
     private final RoleRepository rr;
-    private final PasswordEncoder passwordEncoder;
 
     @Lazy
-    public UserServiceImpl(UserRepository ur, PasswordEncoder passwordEncoder, RoleRepository rr) {
+    public UserServiceImpl(UserRepository ur, RoleRepository rr) {
         this.ur = ur;
-        this.passwordEncoder = passwordEncoder;
         this.rr = rr;
     }
 
@@ -34,8 +32,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = ur.findByUsername(username);
         if (user == null) {
-            System.out.println("User \'" + username + "\' not found");
-            throw new UsernameNotFoundException("User \'" + username + "\' not found");
+            System.out.println("User '" + username + "' not found");
+            throw new UsernameNotFoundException("User '" + username + "' not found");
         }
         return user;
     }
@@ -65,10 +63,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Set<Role> roles = new HashSet<>();
         roles.add(rr.findByName("ROLE_USER"));
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         ur.save(user);
 
         return true;
+    }
+
+    @Override
+    @Transactional(rollbackOn = HibernateException.class)
+    public void update(User user) {
+        ur.save(user);
     }
 
     @Override
@@ -81,7 +84,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         roles.add(rr.findByName("ROLE_USER"));
         roles.add(rr.findByName("ROLE_ADMIN"));
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         ur.save(user);
 
         return true;

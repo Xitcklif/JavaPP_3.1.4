@@ -12,7 +12,7 @@
 </div>
 <h1>Log in your account</h1>
 <form th:method="POST" th:action="@{/login}">
-    <input style="font-size:18px" type="text" placeholder="Username" th:name="username"/>
+    <input style="font-size:18px" type="text" placeholder="Username" th:name="username" th:autofocus/>
     <p/>
     <input style="font-size:18px" type="password" placeholder="Password" th:name="password"/>
     <p/>

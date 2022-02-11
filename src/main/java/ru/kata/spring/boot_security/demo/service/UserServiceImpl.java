@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(rollbackOn = HibernateException.class)
     public String update(User user, String roleAdmin, String pass) {
 
-
         if (user.getUsername().length() < 3) {
             return "The username must contain more than 3 characters!";
         }

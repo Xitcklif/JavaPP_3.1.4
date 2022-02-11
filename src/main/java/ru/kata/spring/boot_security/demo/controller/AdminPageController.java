@@ -54,8 +54,7 @@ public class AdminPageController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editUserPost(@PathVariable("id") long id,
-                               @RequestParam(name = "role_admin", required = false) String roleAdmin,
+    public String editUserPost(@RequestParam(name = "role_admin", required = false) String roleAdmin,
                                @RequestParam(name = "password", required = false) String pass,
                                @ModelAttribute("user") User user,
                                Model model) {

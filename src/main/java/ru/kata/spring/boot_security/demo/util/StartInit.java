@@ -14,25 +14,24 @@ public class StartInit {
 
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
-    private final PasswordEncoder passwordEncoder;
 
     public StartInit(UserServiceImpl userService,
-                     RoleServiceImpl roleService,
-                     PasswordEncoder passwordEncoder) {
+                     RoleServiceImpl roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
     public void createRoot() {
         User root = new User("root", "root", "root");
+
         Role user = new Role("ROLE_USER");
         Role admin = new Role("ROLE_ADMIN");
 
         roleService.addRoleToTable(user);
         roleService.addRoleToTable(admin);
-        root.setPassword(passwordEncoder.encode(root.getPassword()));
-        userService.saveAsAdmin(root);
+
+        userService.save(root);
+        userService.update(root, "admin", "");
     }
 }

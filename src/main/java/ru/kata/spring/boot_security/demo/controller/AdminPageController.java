@@ -19,15 +19,9 @@ import java.util.Set;
 public class AdminPageController {
 
     private final UserServiceImpl userService;
-    private final RoleServiceImpl roleService;
-    private final PasswordEncoder passwordEncoder;
 
-    public AdminPageController(UserServiceImpl userService,
-                               RoleServiceImpl roleService,
-                               PasswordEncoder passwordEncoder) {
+    public AdminPageController(UserServiceImpl userService) {
         this.userService = userService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping()
@@ -51,17 +45,9 @@ public class AdminPageController {
     @PostMapping("/new")
     public String newUserPost(@ModelAttribute("user") User user,
                               Model model) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getPassword().length() < 1) {
-            model.addAttribute("passwordErr", "passwords should more 3 symbols");
-            return "create";
-        }
-        if (user.getUsername().length() < 1) {
-            model.addAttribute("usernameErr", "username should more 3 symbols");
-            return "create";
-        }
-        if (!userService.save(user)) {
-            model.addAttribute("usernameErr", "This username is already used");
+        String msg;
+        if (!(msg = userService.save(user)).equals("ok")) {
+            model.addAttribute("errorText", msg);
             return "create";
         }
         return "redirect:/admin";
@@ -80,30 +66,11 @@ public class AdminPageController {
                                @RequestParam(name = "password", required = false) String pass,
                                @ModelAttribute("user") User user,
                                Model model) {
-
-        Set<Role> roles = new HashSet<>();
-        if (roleAdmin != null) {
-            roles.add(roleService.getRoleByName("ROLE_ADMIN"));
+        String msg;
+        if (!(msg = userService.update(user, roleAdmin, pass)).equals("ok")) {
+            model.addAttribute("errorText", msg);
+            return "/edit";
         }
-        roles.add(roleService.getRoleByName("ROLE_USER"));
-        user.setRoles(roles);
-
-        if (pass.equals("")) {
-            user.setPassword(userService.findByUsername(user.getUsername()).getPassword());
-        } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        if (user.getPassword().length() < 1) {
-            model.addAttribute("passwordErr", "passwords should more 3 symbols");
-            return "/edit" + id;
-        }
-        if (user.getUsername().length() < 1) {
-            model.addAttribute("usernameErr", "username should more 3 symbols");
-            return "/edit" + id;
-        }
-
-        userService.update(user);
         return "redirect:/admin";
     }
 }

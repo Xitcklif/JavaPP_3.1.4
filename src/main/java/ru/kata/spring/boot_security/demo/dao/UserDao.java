@@ -1,14 +1,12 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.demo.dao;
 
 import ru.kata.spring.boot_security.demo.model.User;
 
-public interface UserService {
-
+public interface UserDao {
     User findByUsername(String username);
     User findById(Long id);
     Iterable<User> findAll();
-    String save(User user);
-    String update(User user, String roleAdmin, String pass);
+    void save(User user);
+    void update(User user);
     void deleteById(Long id);
-
 }

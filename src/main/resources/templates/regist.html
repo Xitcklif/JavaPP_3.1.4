@@ -9,15 +9,17 @@
 <body>
 <h1>Registration new user</h1>
 <form th:method="POST" th:action="@{/regist}" th:object="${user}">
-    <input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username" id="usernameErr" th:autofocus/>
-    <lable style="font-size:18px" for="usernameErr" th:utext="${usernameErr}"></lable>
-    <p/>
-    <input style="font-size:18px" type="password" th:field="*{password}" placeholder="Password" id="pass"/>
-    <lable style="font-size:18px" for="pass">3 symbols or more</lable>
-    <p/>
-    <input style="font-size:18px" type="password" th:field="*{confPass}" placeholder="Confirm password" id="passwordErr"/>
-    <lable style="font-size:18px" for="passwordErr" th:utext="${passwordErr}"></lable>
-    <p/>
+
+	<input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username" id="usernameErr" th:autofocus/>
+    <lable style="font-size:18px" for="usernameErr" th:utext="${errorText}"></lable>
+
+	<p/>
+    <input style="font-size:18px" type="password" th:field="*{password}" placeholder="Password"/>
+
+	<p/>
+    <input style="font-size:18px" type="password" th:field="*{confPass}" placeholder="Confirm password"/>
+
+	<p/>
     <a th:href="@{/}"><input style="font-size:18px" type="submit" value="Registration"/></a>
 </form>
 

@@ -17,9 +17,6 @@ public class Role implements GrantedAuthority {
 
     @Transient
     @ManyToMany(mappedBy = "roles")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
-            org.hibernate.annotations.CascadeType.MERGE,
-            org.hibernate.annotations.CascadeType.PERSIST})
     private Set<User> users;
 
     public Role() {}

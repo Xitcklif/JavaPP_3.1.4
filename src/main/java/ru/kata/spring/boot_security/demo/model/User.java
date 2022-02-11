@@ -23,9 +23,6 @@ public class User implements UserDetails {
     private String confPass;
 
     @ManyToMany(fetch=FetchType.EAGER)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
-            org.hibernate.annotations.CascadeType.MERGE,
-            org.hibernate.annotations.CascadeType.PERSIST})
     private Set<Role> roles = new HashSet<>();
 
     public User() {}

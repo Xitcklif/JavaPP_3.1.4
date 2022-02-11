@@ -20,14 +20,11 @@ import java.util.Set;
 public class AdminPageController {
 
     private final UserServiceImpl userService;
-    private final RoleServiceImpl roleService;
     private final UserDetailsService userDetailsService;
 
     public AdminPageController(UserServiceImpl userService,
-                               RoleServiceImpl roleService,
                                UserDetailsService userDetailsService) {
         this.userService = userService;
-        this.roleService = roleService;
         this.userDetailsService = userDetailsService;
     }
 
@@ -36,7 +33,6 @@ public class AdminPageController {
         model.addAttribute("username", userDetailsService.loadUserByUsername(principal.getName()));
         model.addAttribute("currUser", userService.findByUsername(principal.getName()));
         model.addAttribute("users", userService.findAll());
-        System.out.println(userService.findAll());
         return "admin";
     }
 

@@ -58,10 +58,10 @@
 									<th class="col-4">Username</th>
 									<th>Roles</th>
 								</tr>
-								<tr th:object="${currUser}">
-									<td th:utext="${currUser.getId()}">Id</td>
-									<td th:utext="${currUser.getUsername()}">Username</td>
-									<td th:utext="${currUser.getRoles()}">Roles</td>
+								<tr th:object="${user}">
+									<td th:utext="${user.getId()}">Id</td>
+									<td th:utext="${user.getUsername()}">Username</td>
+									<td th:utext="${user.getRoles()}">Roles</td>
 								</tr>
 							</table>
 						</div>

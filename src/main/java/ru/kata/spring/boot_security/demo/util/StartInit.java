@@ -14,7 +14,8 @@ public class StartInit {
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
 
-    public StartInit(UserServiceImpl userService, RoleServiceImpl roleService) {
+    public StartInit(UserServiceImpl userService,
+                     RoleServiceImpl roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -22,11 +23,14 @@ public class StartInit {
     @PostConstruct
     public void createRoot() {
         User root = new User("root", "root", "root");
+
         Role user = new Role("ROLE_USER");
         Role admin = new Role("ROLE_ADMIN");
 
         roleService.addRoleToTable(user);
         roleService.addRoleToTable(admin);
-        userService.saveAsAdmin(root);
+
+        userService.save(root, "admin");
+        //userService.update(root, "admin", "");
     }
 }

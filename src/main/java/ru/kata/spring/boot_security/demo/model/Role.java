@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -17,9 +16,6 @@ public class Role implements GrantedAuthority {
 
     @Transient
     @ManyToMany(mappedBy = "roles")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
-            org.hibernate.annotations.CascadeType.MERGE,
-            org.hibernate.annotations.CascadeType.PERSIST})
     private Set<User> users;
 
     public Role() {}
@@ -64,6 +60,12 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return "'" + name + "'";
+        if (name.equals("ROLE_USER")) {
+            return "USER";
+        }
+        if (name.equals("ROLE_ADMIN")) {
+            return "ADMIN";
+        }
+        return name;
     }
 }

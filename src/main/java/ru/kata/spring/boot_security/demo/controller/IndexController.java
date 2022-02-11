@@ -10,15 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/logout")
-public class LogoutController {
+@RequestMapping("/")
+public class IndexController {
 
     @GetMapping()
-    public String showUser(HttpServletRequest request, HttpServletResponse response) {
+    public String loginPage() {
+        return "redirect:/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/";
+        return "redirect:/login";
     }
 }

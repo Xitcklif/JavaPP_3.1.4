@@ -11,7 +11,12 @@ import javax.transaction.Transactional;
 @Service
 public class RoleServiceImpl implements RoleService{
 
-    //private final RoleRepository rr;
+//    private final RoleRepository rr;
+//
+//    public RoleServiceImpl(RoleRepository rr) {
+//        this.rr = rr;
+//    }
+
     private final RoleDaoImpl rr;
 
     public RoleServiceImpl(RoleDaoImpl rr) {

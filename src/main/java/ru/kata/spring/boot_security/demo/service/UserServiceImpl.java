@@ -21,9 +21,19 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    //private final UserRepository ur;
+//    private final UserRepository ur;
+//    private final RoleRepository rr;
+//
+//    @Lazy
+//    public UserServiceImpl(UserRepository ur,
+//                           RoleRepository rr,
+//                           PasswordEncoder passwordEncoder) {
+//        this.ur = ur;
+//        this.rr = rr;
+//        this.passwordEncoder = passwordEncoder;
+//    }
+
     private final UserDaoImpl ur;
-    //private final RoleRepository rr;
     private final RoleDaoImpl rr;
     private final PasswordEncoder passwordEncoder;
 

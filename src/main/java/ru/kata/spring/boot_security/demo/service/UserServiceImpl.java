@@ -78,8 +78,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Set<Role> roles = new HashSet<>();
         roles.add(rr.findByName("ROLE_USER"));
         user.setRoles(roles);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setConfPass(user.getPassword());
+
         ur.save(user);
     }
 

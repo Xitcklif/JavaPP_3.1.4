@@ -1,11 +1,18 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+<<<<<<< HEAD
+=======
+//import org.hibernate.SessionFactory;
+>>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+<<<<<<< HEAD
 
+=======
+>>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
 import java.util.List;
 
 @Repository
@@ -52,4 +59,55 @@ public class UserDaoImpl implements UserDao {
     public void deleteById(Long id) {
         em.remove(findById(id));
     }
+<<<<<<< HEAD
+=======
+
+//    private final SessionFactory sessionFactory;
+//
+//    public UserDaoImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
+//
+//    @Override
+//    public void save(User user) {
+//        sessionFactory.getCurrentSession().save(user);
+//    }
+//
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public Iterable<User> findAll() {
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from User")
+//                .getResultList();
+//    }
+//
+//    @Override
+//    public User findByUsername(String username) {
+//        return (User) sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from User where username = :name")
+//                .setParameter("name", username)
+//                .uniqueResult();
+//    }
+//
+//    @Override
+//    public User findById(Long id) {
+//        return (User) sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from User where id = :id")
+//                .setParameter("id", id)
+//                .uniqueResult();
+//    }
+//
+//    @Override
+//    public void update(User user, String roleAdmin, String pass) {
+//        sessionFactory.getCurrentSession().merge(user);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        sessionFactory.getCurrentSession().delete(findById(id));
+//    }
+>>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
 }

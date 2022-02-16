@@ -23,10 +23,16 @@ public class UserController {
 
     @GetMapping()
     public String showUser(Model model, Principal principal) {
+<<<<<<< HEAD
         model.addAttribute("user",
                 userService.findByUsername(
                         userDetailsService.loadUserByUsername(
                                 principal.getName()).getUsername()));
+=======
+        UserDetails user = userDetailsService.loadUserByUsername(principal.getName());
+        model.addAttribute("username", user);
+        model.addAttribute("user", userService.findByUsername(user.getUsername()));
+>>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
         return "user";
     }
 }

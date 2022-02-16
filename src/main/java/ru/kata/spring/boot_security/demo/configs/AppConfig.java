@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
 @Configuration
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement

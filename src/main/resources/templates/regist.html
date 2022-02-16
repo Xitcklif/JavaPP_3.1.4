@@ -3,26 +3,26 @@
       xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Registration</title>
+	<meta charset="UTF-8">
+	<title>Registration</title>
 </head>
 <body>
 <h1>Registration new user</h1>
 <form th:method="POST" th:action="@{/regist}" th:object="${user}">
-
-	<input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username" id="usernameErr" th:autofocus/>
-    <lable style="font-size:18px" for="usernameErr" th:utext="${errorText}"></lable>
+	<input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username" th:autofocus/>
 
 	<p/>
-    <input style="font-size:18px" type="password" th:field="*{password}" placeholder="Password"/>
+	<input style="font-size:18px" type="password" th:field="*{password}" placeholder="Password"/>
 
 	<p/>
-    <input style="font-size:18px" type="password" th:field="*{confPass}" placeholder="Confirm password"/>
+	<input style="font-size:18px" type="password" th:field="*{confPass}" placeholder="Confirm password"/>
 
 	<p/>
-    <a th:href="@{/}"><input style="font-size:18px" type="submit" value="Registration"/></a>
+	<a th:href="@{/}"><input style="font-size:18px" type="submit" value="Registration"/></a>
 </form>
 
-<a th:href="@{/}"><button style="font-size:18px">Home</button></a>
+<a th:href="@{/}">
+	<button style="font-size:18px">Home</button>
+</a>
 </body>
 </html>

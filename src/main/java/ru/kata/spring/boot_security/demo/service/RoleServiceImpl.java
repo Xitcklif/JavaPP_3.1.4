@@ -2,20 +2,14 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
+
 import ru.kata.spring.boot_security.demo.dao.RoleDaoImpl;
 import ru.kata.spring.boot_security.demo.model.Role;
-//import ru.kata.spring.boot_security.demo.repo.RoleRepository;
 
 import javax.transaction.Transactional;
 
 @Service
 public class RoleServiceImpl implements RoleService{
-
-//    private final RoleRepository rr;
-//
-//    public RoleServiceImpl(RoleRepository rr) {
-//        this.rr = rr;
-//    }
 
     private final RoleDaoImpl rr;
 

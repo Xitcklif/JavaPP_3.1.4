@@ -23,27 +23,10 @@ public class AdminPageController {
         return "admin";
     }
 
-    @PostMapping("/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
-        userService.deleteById(id);
-        return "redirect:/admin";
-    }
-
     @GetMapping("/new")
     public String newUserGet(Model model) {
         model.addAttribute("user", new User());
         return "/create";
-    }
-
-    @PostMapping("/new")
-    public String newUserPost(@ModelAttribute("user") User user,
-                              Model model) {
-        String msg;
-        if (!(msg = userService.save(user)).equals("ok")) {
-            model.addAttribute("errorText", msg);
-            return "create";
-        }
-        return "redirect:/admin";
     }
 
     @GetMapping("/edit/{id}")
@@ -53,16 +36,25 @@ public class AdminPageController {
         return "/edit";
     }
 
+    @PostMapping("/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        userService.deleteById(id);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/new")
+    public String newUserPost(@ModelAttribute("user") User user,
+                              Model model) {
+        userService.save(user);
+        return "redirect:/admin";
+    }
+
     @PostMapping("/edit/{id}")
     public String editUserPost(@RequestParam(name = "role_admin", required = false) String roleAdmin,
                                @RequestParam(name = "password", required = false) String pass,
                                @ModelAttribute("user") User user,
                                Model model) {
-        String msg;
-        if (!(msg = userService.update(user, roleAdmin, pass)).equals("ok")) {
-            model.addAttribute("errorText", msg);
-            return "/edit";
-        }
+        userService.update(user, roleAdmin, pass);
         return "redirect:/admin";
     }
 }

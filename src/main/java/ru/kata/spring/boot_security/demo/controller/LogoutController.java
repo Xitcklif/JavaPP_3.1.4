@@ -1,10 +1,8 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,12 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/logout")
 public class LogoutController {
 
+    private UserServiceImpl userService;
+
+    public LogoutController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
     @GetMapping()
-    public String showUser(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
+    public String showUser(HttpServletRequest request,
+                           HttpServletResponse response) {
+        userService.logoutUser(request, response);
         return "redirect:/";
     }
 }

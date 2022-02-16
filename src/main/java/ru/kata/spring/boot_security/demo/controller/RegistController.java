@@ -25,11 +25,7 @@ public class RegistController {
     @PostMapping()
     public String registNewUser(@ModelAttribute("user") User user,
                                 Model model) {
-        String msg;
-        if (!(msg = userService.save(user)).equals("ok")) {
-            model.addAttribute("errorText", msg);
-            return "regist";
-        }
+        userService.save(user);
         return "login";
     }
 }

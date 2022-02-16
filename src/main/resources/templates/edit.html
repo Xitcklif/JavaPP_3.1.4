@@ -12,8 +12,7 @@
 	<input style="font-size:18px" type="text" th:field="*{id}" placeholder="ID" readonly/>
 
 	<p style="font-size:18px">Username</p>
-	<input style="font-size:18px" type="text" th:field="*{username}" id="usernameErr" placeholder="Username, min 1 sym"/>
-	<lable style="font-size:18px" for="usernameErr" th:utext="${errorText}"></lable>
+	<input style="font-size:18px" type="text" th:field="*{username}" placeholder="Username, min 1 sym"/>
 
 	<p style="font-size:18px">New password</p>
 	<input style="font-size:18px" type="text" th:name="password" placeholder="New password, min 1 sym"/>

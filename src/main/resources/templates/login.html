@@ -2,10 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
-<<<<<<< HEAD
 	<title>Log in</title>
 </head>
 <body>
@@ -31,25 +29,5 @@
 <a th:href="@{/}">
 	<button style="font-size:18px">Home</button>
 </a>
-=======
-
-	<link rel="stylesheet"
-	      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-	      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
-	      crossorigin="anonymous">
-
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<title>Log in</title>
-</head>
-
-<body class="d-flex justify-content-center mt-5">
-<form class="form-group col-5 d-flex flex-column justify-content-center" th:method="POST" th:action="@{/login}">
-	<h2 class="h-3 mb-3 font-weight-normal font-weight-bold">Please sign in</h2>
-	<input type="text" class="form-control" placeholder="Username" th:name="username" required autofocus/>
-	<input type="password" class="mb-2 form-control" placeholder="Password" th:name="password" required/>
-	<button class="btn btn-lg btn-primary btn-block" th:href="@{/}" type="submit">Sign in</button>
-</form>
->>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
 </body>
 </html>

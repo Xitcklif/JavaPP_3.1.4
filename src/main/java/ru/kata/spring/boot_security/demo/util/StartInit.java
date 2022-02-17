@@ -22,26 +22,15 @@ public class StartInit {
 
     @PostConstruct
     public void createRoot() {
-<<<<<<< HEAD
         User root = new User("root", "root", "root");
 
-=======
->>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
         Role user = new Role("ROLE_USER");
-        roleService.addRoleToTable(user);
-
         Role admin = new Role("ROLE_ADMIN");
+
+        roleService.addRoleToTable(user);
         roleService.addRoleToTable(admin);
 
-<<<<<<< HEAD
         userService.save(root);
         userService.update(root, "admin", "");
-=======
-        User adm = new User("adm", "adm", "adm");
-        userService.save(adm, "admin");
-
-        User root = new User("root", "root", "root");
-        userService.save(root, "admin");
->>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
     }
 }

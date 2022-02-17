@@ -1,10 +1,10 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import java.security.Principal;
@@ -23,16 +23,10 @@ public class UserController {
 
     @GetMapping()
     public String showUser(Model model, Principal principal) {
-<<<<<<< HEAD
         model.addAttribute("user",
-                userService.findByUsername(
+                userService.getUserByUsername(
                         userDetailsService.loadUserByUsername(
                                 principal.getName()).getUsername()));
-=======
-        UserDetails user = userDetailsService.loadUserByUsername(principal.getName());
-        model.addAttribute("username", user);
-        model.addAttribute("user", userService.findByUsername(user.getUsername()));
->>>>>>> eadcb3ee1b800759be262ad4ac23ec99f211ba63
         return "user";
     }
 }

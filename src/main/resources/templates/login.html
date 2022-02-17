@@ -2,32 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
+
+	<link rel="stylesheet"
+	      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+	      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+	      crossorigin="anonymous">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 	<title>Log in</title>
 </head>
-<body>
-<div sec:authorize="isAuthenticated()">
-	<% response.sendRedirect("/"); %>
-</div>
-<h1>Log in your account</h1>
-<form th:method="POST" th:action="@{/login}">
-	<input style="font-size:18px" type="text" placeholder="Username" th:name="username" th:autofocus/>
 
-	<p/>
-	<input style="font-size:18px" type="password" placeholder="Password" th:name="password"/>
-
-	<p/>
-	<input th:href="@{/}" style="font-size:18px" type="submit" value="Login"/>
+<body class="d-flex justify-content-center mt-5">
+<form class="form-group col-5 d-flex flex-column justify-content-center" th:method="POST" th:action="@{/login}">
+	<h2 class="h-3 mb-3 font-weight-normal font-weight-bold">Please sign in</h2>
+	<input type="text" class="form-control" placeholder="Username" th:name="username" required autofocus/>
+	<input type="password" class="mb-2 form-control" placeholder="Password" th:name="password" required/>
+	<button class="btn btn-lg btn-primary btn-block" th:href="@{/}" type="submit">Sign in</button>
 </form>
-
-<a th:href="@{/regist}">
-	<button style="font-size:18px">Registration</button>
-</a>
-
-<p/>
-<a th:href="@{/}">
-	<button style="font-size:18px">Home</button>
-</a>
 </body>
 </html>

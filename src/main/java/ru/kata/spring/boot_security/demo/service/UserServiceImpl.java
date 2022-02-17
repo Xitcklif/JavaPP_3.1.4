@@ -2,21 +2,16 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.hibernate.HibernateException;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.dao.RoleDaoImpl;
 import ru.kata.spring.boot_security.demo.dao.UserDaoImpl;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
@@ -25,22 +20,22 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final UserDaoImpl userDao;
-    private final RoleDaoImpl roleDao;
+    private final UserDaoImpl ur;
+    private final RoleDaoImpl rr;
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
-    public UserServiceImpl(UserDaoImpl userDao,
-                           RoleDaoImpl roleDao,
+    public UserServiceImpl(UserDaoImpl ur,
+                           RoleDaoImpl rr,
                            PasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
-        this.roleDao = roleDao;
+        this.ur = ur;
+        this.rr = rr;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.getUserByUsername(username);
+        User user = ur.findByUsername(username);
         if (user == null) {
             System.out.println("User '" + username + "' not found");
             throw new UsernameNotFoundException("User '" + username + "' not found");
@@ -49,39 +44,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userDao.getUserByUsername(username);
+    public User findByUsername(String username) {
+        return ur.findByUsername(username);
     }
 
     @Override
-    public User getUserById(Long id) {
-        Optional<User> userFromDb = Optional.ofNullable(userDao.getUserById(id));
+    public User findById(Long id) {
+        Optional<User> userFromDb = Optional.ofNullable(ur.findById(id));
         return userFromDb.orElse(new User());
     }
 
     @Override
-    public Iterable<User> getAllUsers() {
-        return userDao.getAllUsers();
+    public Iterable<User> findAll() {
+        return ur.findAll();
     }
 
     @Override
     @Transactional(rollbackOn = HibernateException.class)
-    public void save(User user) {
+    public void save(User user, String adm) {
 
-        if (userDao.getUserByUsername(user.getUsername()) != null ||
+        if (ur.findByUsername(user.getUsername()) != null ||
                 user.getUsername().length() < 1 ||
-                getPassErrors(user)) {
+                checkPassErrors(user)) {
             return;
         }
 
         Set<Role> roles = new HashSet<>();
-        roles.add(roleDao.getRoleByName("ROLE_USER"));
+        if (adm != null) {
+            roles.add(rr.findByName("ROLE_ADMIN"));
+        }
+        roles.add(rr.findByName("ROLE_USER"));
         user.setRoles(roles);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setConfPass(user.getPassword());
 
-        userDao.save(user);
+        ur.save(user);
     }
 
     @Override
@@ -94,24 +91,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         Set<Role> roles = new HashSet<>();
         if (roleAdmin != null) {
-            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
+            roles.add(rr.findByName("ROLE_ADMIN"));
         }
-        roles.add(roleDao.getRoleByName("ROLE_USER"));
+        roles.add(rr.findByName("ROLE_USER"));
         user.setRoles(roles);
 
         if (pass.equals("")) {
-            user.setPassword(getUserByUsername(user.getUsername()).getPassword());
+            user.setPassword(findByUsername(user.getUsername()).getPassword());
         } else {
-            if (getPassErrors(user)) {
+            if (checkPassErrors(user)) {
                 return;
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        userDao.update(user);
+        ur.update(user);
     }
 
-    private boolean getPassErrors(User user) {
+    private boolean checkPassErrors(User user) {
         return (user.getPassword().length() < 1 ||
                 !user.getPassword().equals(user.getConfPass()));
     }
@@ -119,15 +116,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(rollbackOn = HibernateException.class)
     public void deleteById(Long id) {
-        if (userDao.getUserById(id) != null) {
-            userDao.deleteById(id);
-        }
-    }
-
-    public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
+        if (ur.findById(id) != null) {
+            ur.deleteById(id);
         }
     }
 }

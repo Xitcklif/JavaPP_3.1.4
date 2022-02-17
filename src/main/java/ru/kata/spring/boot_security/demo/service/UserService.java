@@ -3,17 +3,15 @@ package ru.kata.spring.boot_security.demo.service;
 import ru.kata.spring.boot_security.demo.model.User;
 
 public interface UserService {
+    User findByUsername(String username);
 
-    User getUserByUsername(String username);
+    User findById(Long id);
 
-    User getUserById(Long id);
+    Iterable<User> findAll();
 
-    Iterable<User> getAllUsers();
-
-    void save(User user);
+    void save(User user, String adm);
 
     void update(User user, String roleAdmin, String pass);
 
     void deleteById(Long id);
-
 }

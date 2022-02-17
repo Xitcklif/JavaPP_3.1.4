@@ -11,44 +11,44 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager em;
 
-    public UserDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public UserDaoImpl(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public void save(User user) {
-        entityManager.persist(user);
+        em.persist(user);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u", User.class)
+    public List<User> findAll() {
+        return em.createQuery("select u from User u", User.class)
                 .getResultList();
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return getAllUsers().stream()
+    public User findByUsername(String username) {
+        return findAll().stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findAny()
                 .orElse(null);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return entityManager.find(User.class, id);
+    public User findById(Long id) {
+        return em.find(User.class, id);
     }
 
     @Override
     public void update(User user) {
-        entityManager.merge(user);
+        em.merge(user);
     }
 
     @Override
     public void deleteById(Long id) {
-        entityManager.remove(getUserById(id));
+        em.remove(findById(id));
     }
 }

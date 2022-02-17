@@ -18,8 +18,8 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public Role getRoleByName(String name) {
-        return getAllRoles().stream()
+    public Role findByName(String name) {
+        return findAll().stream()
                 .filter(role -> role.getName().equals(name))
                 .findAny()
                 .orElse(null);
@@ -32,7 +32,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Role> getAllRoles() {
+    public List<Role> findAll() {
         return em.createQuery("select r from Role r", Role.class)
                 .getResultList();
     }

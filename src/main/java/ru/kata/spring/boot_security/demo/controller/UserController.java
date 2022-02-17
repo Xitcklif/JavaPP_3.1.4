@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,17 +17,18 @@ public class UserController {
     private final UserServiceImpl userService;
     private final UserDetailsService userDetailsService;
 
-    public UserController(UserServiceImpl userService, UserDetailsService userDetailsService) {
+    public UserController(UserServiceImpl userService,
+                          UserDetailsService userDetailsService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
     }
 
     @GetMapping()
-    public String showUser(Model model, Principal principal) {
-        model.addAttribute("user",
-                userService.getUserByUsername(
-                        userDetailsService.loadUserByUsername(
-                                principal.getName()).getUsername()));
+    public String showUser(Model model,
+                           Principal principal) {
+        UserDetails user = userDetailsService.loadUserByUsername(principal.getName());
+        model.addAttribute("username", user);
+        model.addAttribute("user", userService.findByUsername(user.getUsername()));
         return "user";
     }
 }

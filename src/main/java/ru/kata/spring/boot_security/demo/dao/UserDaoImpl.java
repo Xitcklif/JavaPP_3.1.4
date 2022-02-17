@@ -24,21 +24,21 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<User> findAll() {
+    public List<User> getAllUsers() {
         return em.createQuery("select u from User u", User.class)
                 .getResultList();
     }
 
     @Override
-    public User findByUsername(String username) {
-        return findAll().stream()
+    public User getUserByUsername(String username) {
+        return getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findAny()
                 .orElse(null);
     }
 
     @Override
-    public User findById(Long id) {
+    public User getUserById(Long id) {
         return em.find(User.class, id);
     }
 
@@ -49,6 +49,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteById(Long id) {
-        em.remove(findById(id));
+        em.remove(getUserById(id));
     }
 }

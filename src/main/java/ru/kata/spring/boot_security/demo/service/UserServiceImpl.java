@@ -20,22 +20,22 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final UserDaoImpl ur;
-    private final RoleDaoImpl rr;
+    private final UserDaoImpl userDao;
+    private final RoleDaoImpl roleDao;
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
-    public UserServiceImpl(UserDaoImpl ur,
-                           RoleDaoImpl rr,
+    public UserServiceImpl(UserDaoImpl userDao,
+                           RoleDaoImpl roleDao,
                            PasswordEncoder passwordEncoder) {
-        this.ur = ur;
-        this.rr = rr;
+        this.userDao = userDao;
+        this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = ur.findByUsername(username);
+        User user = userDao.getUserByUsername(username);
         if (user == null) {
             System.out.println("User '" + username + "' not found");
             throw new UsernameNotFoundException("User '" + username + "' not found");
@@ -44,41 +44,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return ur.findByUsername(username);
+    public User getUserByUsername(String username) {
+        return userDao.getUserByUsername(username);
     }
 
     @Override
-    public User findById(Long id) {
-        Optional<User> userFromDb = Optional.ofNullable(ur.findById(id));
+    public User getUserById(Long id) {
+        Optional<User> userFromDb = Optional.ofNullable(userDao.getUserById(id));
         return userFromDb.orElse(new User());
     }
 
     @Override
-    public Iterable<User> findAll() {
-        return ur.findAll();
+    public Iterable<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 
     @Override
     @Transactional(rollbackOn = HibernateException.class)
     public void save(User user, String adm) {
 
-        if (ur.findByUsername(user.getUsername()) != null ||
+        if (userDao.getUserByUsername(user.getUsername()) != null ||
                 user.getUsername().length() < 1 ||
-                checkPassErrors(user)) {
+                getPassErrors(user)) {
             return;
         }
 
         Set<Role> roles = new HashSet<>();
         if (adm != null) {
-            roles.add(rr.findByName("ROLE_ADMIN"));
+            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
         }
-        roles.add(rr.findByName("ROLE_USER"));
+        roles.add(roleDao.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        ur.save(user);
+        userDao.save(user);
     }
 
     @Override
@@ -91,24 +91,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         Set<Role> roles = new HashSet<>();
         if (roleAdmin != null) {
-            roles.add(rr.findByName("ROLE_ADMIN"));
+            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
         }
-        roles.add(rr.findByName("ROLE_USER"));
+        roles.add(roleDao.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
         if (pass.equals("")) {
-            user.setPassword(findByUsername(user.getUsername()).getPassword());
+            user.setPassword(getUserByUsername(user.getUsername()).getPassword());
         } else {
-            if (checkPassErrors(user)) {
+            if (getPassErrors(user)) {
                 return;
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        ur.update(user);
+        userDao.update(user);
     }
 
-    private boolean checkPassErrors(User user) {
+    private boolean getPassErrors(User user) {
         return (user.getPassword().length() < 1 ||
                 !user.getPassword().equals(user.getConfPass()));
     }
@@ -116,8 +116,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(rollbackOn = HibernateException.class)
     public void deleteById(Long id) {
-        if (ur.findById(id) != null) {
-            ur.deleteById(id);
+        if (userDao.getUserById(id) != null) {
+            userDao.deleteById(id);
         }
     }
 }

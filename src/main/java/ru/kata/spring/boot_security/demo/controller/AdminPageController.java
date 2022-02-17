@@ -25,8 +25,8 @@ public class AdminPageController {
     @GetMapping()
     public String usersList(Model model, Principal principal) {
         model.addAttribute("username", userDetailsService.loadUserByUsername(principal.getName()));
-        model.addAttribute("currUser", userService.findByUsername(principal.getName()));
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("currUser", userService.getUserByUsername(principal.getName()));
+        model.addAttribute("users", userService.getAllUsers());
         return "admin";
     }
 

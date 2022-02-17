@@ -10,25 +10,25 @@ import javax.transaction.Transactional;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private final RoleDaoImpl rr;
+    private final RoleDaoImpl roleDao;
 
-    public RoleServiceImpl(RoleDaoImpl rr) {
-        this.rr = rr;
+    public RoleServiceImpl(RoleDaoImpl roleDao) {
+        this.roleDao = roleDao;
     }
 
     @Override
     public Role getRoleByName(String name) {
-        return rr.findByName(name);
+        return roleDao.getRoleByName(name);
     }
 
     @Override
     @Transactional(rollbackOn = HibernateException.class)
     public void addRoleToTable(Role role) {
-        rr.save(role);
+        roleDao.save(role);
     }
 
     @Override
     public Iterable<Role> getAllRoles() {
-        return rr.findAll();
+        return roleDao.getAllRoles();
     }
 }

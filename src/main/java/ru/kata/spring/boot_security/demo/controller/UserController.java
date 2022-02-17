@@ -28,7 +28,7 @@ public class UserController {
                            Principal principal) {
         UserDetails user = userDetailsService.loadUserByUsername(principal.getName());
         model.addAttribute("username", user);
-        model.addAttribute("user", userService.findByUsername(user.getUsername()));
+        model.addAttribute("user", userService.getUserByUsername(user.getUsername()));
         return "user";
     }
 }

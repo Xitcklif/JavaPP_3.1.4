@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "UsersTable")
 public class User implements UserDetails {
 
     @Id
@@ -17,9 +16,8 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
-
-    @Transient
     private String confPass;
+    private boolean isAdmin = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
@@ -31,6 +29,13 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.confPass = confPass;
+    }
+
+    public User(String username, String password, String confPass, boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        this.confPass = confPass;
+        this.isAdmin = isAdmin;
     }
 
     public Long getId() {
@@ -55,6 +60,14 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     @Override

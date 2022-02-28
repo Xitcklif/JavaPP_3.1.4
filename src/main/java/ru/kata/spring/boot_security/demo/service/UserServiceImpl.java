@@ -13,9 +13,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -49,19 +47,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        Optional<User> userFromDb = Optional.ofNullable(userDao.getUserById(id));
-        return userFromDb.orElse(new User());
-    }
-
-    @Override
-    public Iterable<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
 
     @Override
     @Transactional(rollbackOn = HibernateException.class)
-    public void save(User user, String adm) {
+    public void save(User user) {
 
         if (userDao.getUserByUsername(user.getUsername()) != null ||
                 user.getUsername().length() < 1 ||
@@ -70,7 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         Set<Role> roles = new HashSet<>();
-        if (adm != null) {
+        if (user.getIsAdmin()) {
             roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
         }
         roles.add(roleDao.getRoleByName("ROLE_USER"));
@@ -83,20 +75,43 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional(rollbackOn = HibernateException.class)
-    public void update(User user, String roleAdmin, String pass) {
+    public void save(User user, boolean adm) {
+
+        if (userDao.getUserByUsername(user.getUsername()) != null ||
+                user.getUsername().length() < 1 ||
+                getPassErrors(user)) {
+            return;
+        }
+
+        Set<Role> roles = new HashSet<>();
+        if (adm) {
+            user.setIsAdmin(true);
+            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
+        }
+        roles.add(roleDao.getRoleByName("ROLE_USER"));
+        user.setRoles(roles);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        userDao.save(user);
+    }
+
+    @Override
+    @Transactional(rollbackOn = HibernateException.class)
+    public void update(User user) {
 
         if (user.getUsername().length() < 1) {
             return;
         }
 
         Set<Role> roles = new HashSet<>();
-        if (roleAdmin != null) {
+        if (user.getIsAdmin()) {
             roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
         }
         roles.add(roleDao.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
-        if (pass.equals("")) {
+        if (user.getPassword().equals("")) {
             user.setPassword(getUserByUsername(user.getUsername()).getPassword());
         } else {
             if (getPassErrors(user)) {
@@ -116,8 +131,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(rollbackOn = HibernateException.class)
     public void deleteById(Long id) {
-        if (userDao.getUserById(id) != null) {
-            userDao.deleteById(id);
-        }
+        userDao.deleteById(id);
     }
 }

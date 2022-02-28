@@ -4,8 +4,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 
 public interface RoleService {
     Role getRoleByName(String name);
-
     void addRoleToTable(Role role);
-
     Iterable<Role> getAllRoles();
 }

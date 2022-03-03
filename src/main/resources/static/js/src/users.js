@@ -41,10 +41,10 @@ async function getUsers() {
 								<td>${user.username}</td>
 								<td>${user.roles.map(r => " " + r.name)}</td>
 								<td>
-									<buttonEdit class="btn btn-primary" data-toggle="modal" name="#editModal" id="${user.id}">Edit</buttonEdit>
+									<buttonEdit class="btn btn-primary" data-toggle="modal" id="${user.id}" href="#modal">Edit</buttonEdit>
 								</td>
 								<td>
-									<buttonDelete class="btn btn-danger" data-toggle="modal" name="#deleteModal" id="${user.id}">Delete</buttonDelete>
+									<buttonDelete class="btn btn-danger" data-toggle="modal" id="${user.id}" href="#modal">Delete</buttonDelete>
 								</td>
 							</tr>
 						`
@@ -154,16 +154,15 @@ async function editUserModal(id) {
 		if (user.isAdmin === true) {
 			modal.querySelector('#adminCheckbox').checked = "checked"
 		}
-		await modalOpen(modal)
 		let buttons = modal.getElementsByTagName('button')
 		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].addEventListener('click', async () => {
 				if (buttons[i].className === "btn btn-success") {
 					await editUser(id)
-					await modalClose(modal)
+					modal.getElementsByClassName("btn btn-secondary")[0].click()
 				} else if (buttons[i].className === "btn btn-secondary" ||
 					buttons[i].className === "close") {
-					await modalClose(modal)
+					await clearModal(modal)
 				}
 			})
 		}
@@ -218,16 +217,15 @@ async function deleteUserModal(id) {
 			modal.querySelector('#adminCheckbox').checked = "checked"
 		}
 		modal.querySelector('#adminCheckbox').disabled = true
-		await modalOpen(modal)
 		let buttons = modal.getElementsByTagName('button')
 		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].addEventListener('click', async () => {
 				if (buttons[i].className === "btn btn-danger") {
 					await deleteUser(id)
-					await modalClose(modal)
+					modal.getElementsByClassName("btn btn-secondary")[0].click()
 				} else if (buttons[i].className === "btn btn-secondary" ||
 					buttons[i].className === "close") {
-					await modalClose(modal)
+					await clearModal(modal)
 				}
 			})
 		}
@@ -245,18 +243,9 @@ async function deleteUser(id) {
 	}
 }
 
-async function modalOpen(modal) {
-	document.getElementsByTagName(`body`)[0].className = "modal-open"
-	modal.className = "modal fade show"
-	modal.ariaHidden = "false"
-	modal.ariaModal = "true"
-	modal.style = "display: block;"
-}
-
-async function modalClose(modal) {
-	delete document.getElementsByTagName(`body`)[0].className
-	modal.className = "modal fade"
-	modal.ariaHidden = "true"
-	modal.ariaModal = "false"
-	modal.style = "display: none;"
+async function clearModal(modal) {
+	modal.querySelector('#un').readOnly = false
+	modal.querySelector('#pw').readOnly = false
+	modal.querySelector('#pw').value = ""
+	modal.querySelector('#cpw').value = ""
 }

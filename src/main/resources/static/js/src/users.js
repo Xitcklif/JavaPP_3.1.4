@@ -34,152 +34,36 @@ async function getUsers() {
 			.then(response => response.json())
 			.then(users => {
 				users.forEach(user => {
-					temp += `
-				<tr>
-					<td>${user.id}</td>
-					<td>${user.username}</td>
-					<td>${user.roles.map(r => " " + r.name)}</td>
-					<td>
-						<button class="btn btn-primary" data-toggle="modal" href="#editModal-${user.id}">Edit</button>
-						<div class="modal fade" id="editModal-${user.id}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-						
-									<div class="modal-header">
-										<h5 class="modal-title">Edit user</h5>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-									</div>
-						
-									<div>
-									
-										<div class="modal-body text-center">
-											<div class="form-group">
-												<label class="font-weight-bold mb-0" for="id">ID</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50" id="id"
-													value="${user.id}" th:name="id" readonly>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="font-weight-bold mb-0" for="un">Username</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50" id="un" 
-													value="${user.username}" th:name="username">
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="font-weight-bold mb-0" for="pw">New password</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50" id="pw" th:name="password">
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="font-weight-bold mb-0" for="cpw">Confirm password</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50" id="cpw" th:name="confPass">
-												</div>
-											</div>
-											<div class="form-group d-flex justify-content-center">
-												<div class="mt-3">
-													<label class="form-check-label font-weight-bold">
-													<input class="form-check-input" type="checkbox" 
-													th:name="roleAdmin" id="editCheckbox">Admin</label>
-												</div>
-											</div>
-										</div>
-						
-										<div class="modal-footer">
-											<button class="btn btn-secondary" data-dismiss="modal" id="close">Close</button>
-											<button class="btn btn-success" id="editUserButton" name="${user.id}">Edit</button>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-						</div>
-					</td>
-					<td>
-						<button class="btn btn-danger" data-toggle="modal" href="#deleteModal-${user.id}">Delete</button>
-						<div class="modal fade" id="deleteModal-${user.id}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-						
-									<div class="modal-header">
-										<h5 class="modal-title">Delete user</h5>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-									</div>
-						
-									<div>
-										<div class="modal-body text-center">
-						
-											<div class="form-group">
-												<label class="font-weight-bold mb-0" for="idDel">ID</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50"
-													id="idDel" value="${user.id}" readonly>
-												</div>
-											</div>
-						
-											<div class="form-group">
-												<label class="font-weight-bold mb-0" for="unDel">Username</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50"
-													id="unDel" value="${user.username}" readonly>
-												</div>
-											</div>
-						
-											<div class="form-group">
-												<label class="font-weight-bold mb-0"
-												       for="pwDel">Password</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50"
-													id="pwDel" value="${user.password}" readonly>
-												</div>
-											</div>
-						
-											<div class="form-group">
-												<label class="font-weight-bold mb-0"
-												       for="rolesDel">Roles</label>
-												<div class="d-flex justify-content-center">
-													<input type="text" class="form-control w-50" id="rolesDel"
-													value="${user.roles.map(r => " " + r.name)}" readonly>
-												</div>
-											</div>
-						
-										</div>
-						
-										<div class="modal-footer">
-											<button class="btn btn-secondary" data-dismiss="modal" id="close">Close</button>
-											<a class="btn btn-danger" id="deleteUserButton" name="${user.id}">Delete</a>
-										</div>
-						
-									</div>
-								</div>
-							</div>
-						</div>
-					</td>
-				</tr>
-				`
+					temp +=
+						`
+							<tr>
+								<td>${user.id}</td>
+								<td>${user.username}</td>
+								<td>${user.roles.map(r => " " + r.name)}</td>
+								<td>
+									<buttonEdit class="btn btn-primary" data-toggle="modal" name="#editModal" id="${user.id}">Edit</buttonEdit>
+								</td>
+								<td>
+									<buttonDelete class="btn btn-danger" data-toggle="modal" name="#deleteModal" id="${user.id}">Delete</buttonDelete>
+								</td>
+							</tr>
+						`
 				})
 				table.innerHTML = temp
 			})
 	}
 	let usersTable = document.querySelector('#usersTable')
 	if (usersTable !== null) {
-		let editButtons = usersTable.getElementsByClassName('btn-success')
-		let deleteButtons = usersTable.getElementsByTagName('a')
-		for (let i = 0; i < editButtons.length; i++) {
-			editButtons[i].addEventListener('click', () => {
-				editUser(editButtons[i].name)
+		let editModalButtons = usersTable.getElementsByTagName('buttonEdit')
+		let deleteModalButtons = usersTable.getElementsByTagName('buttonDelete')
+		for (let i = 0; i < editModalButtons.length; i++) {
+			editModalButtons[i].addEventListener('click', () => {
+				editUserModal(editModalButtons[i].id)
 			})
 		}
-		for (let i = 0; i < deleteButtons.length; i++) {
-			deleteButtons[i].addEventListener('click', () => {
-				deleteUser(deleteButtons[i].name)
+		for (let i = 0; i < deleteModalButtons.length; i++) {
+			deleteModalButtons[i].addEventListener('click', () => {
+				deleteUserModal(deleteModalButtons[i].id)
 			})
 		}
 	}
@@ -238,35 +122,141 @@ async function addUser() {
 	}
 }
 
-async function editUser(userId) {
-	if (userId !== undefined) {
-		let modal = document.querySelector("#editModal-" + userId)
+async function editUserModal(id) {
+	if (id !== undefined) {
+		document.querySelector(`#modal h5`).textContent = "Edit user"
+		const user = await fetch(`/api/users/${id}`)
+			.then(response => response.json())
+		let modal = document.querySelector('#modal')
+		document.querySelector(`#modal modalRoles`).innerHTML =
+			`
+				<div class="form-group">
+					<label class="font-weight-bold mb-0" for="cpw">Confirm password</label>
+					<div class="d-flex justify-content-center">
+						<input type="text" class="form-control w-50" id="cpw" name="confPass">
+					</div>
+				</div>
+
+				<div class="mt-3">
+					<label class="form-check-label font-weight-bold">
+					<input class="form-check-input" type="checkbox"
+					name="roleAdmin" id="adminCheckbox">Admin</label>
+				</div>
+			`
+		document.getElementsByClassName(`modal-footer`)[0].innerHTML =
+			`
+				<button class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button class="btn btn-success">Edit</button>
+			`
+		modal.querySelector('#id').value = user.id
+		modal.querySelector('#id').readOnly = true
+		modal.querySelector('#un').value = user.username
+		if (user.isAdmin === true) {
+			modal.querySelector('#adminCheckbox').checked = "checked"
+		}
+		await modalOpen(modal)
+		let buttons = modal.getElementsByTagName('button')
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].addEventListener('click', async () => {
+				if (buttons[i].className === "btn btn-success") {
+					await editUser(id)
+					await modalClose(modal)
+				} else if (buttons[i].className === "btn btn-secondary" ||
+					buttons[i].className === "close") {
+					await modalClose(modal)
+				}
+			})
+		}
+	}
+}
+
+async function editUser(id) {
+	if (id !== undefined) {
+		let modal = document.querySelector('#modal')
 		let editUser = {
 			id: modal.querySelector('#id').value,
 			username: modal.querySelector('#un').value,
 			password: modal.querySelector('#pw').value,
 			confPass: modal.querySelector('#cpw').value,
-			isAdmin: modal.querySelector('#editCheckbox').checked
+			isAdmin: modal.querySelector('#adminCheckbox').checked
 		}
 		await usersFetch.editUser(editUser)
 			.then(response => {
 				if (response.ok) {
-					modal.querySelector('#close').click()
 					getUsers()
 				}
 			})
 	}
 }
 
-async function deleteUser(userId) {
-	if (userId !== undefined) {
-		let modal = document.querySelector("#deleteModal-" + userId)
-		await usersFetch.deleteUser(userId)
+async function deleteUserModal(id) {
+	if (id !== undefined) {
+		document.querySelector(`#modal h5`).textContent = "Delete user"
+		const user = await fetch(`/api/users/${id}`)
+			.then(response => response.json())
+		let modal = document.querySelector('#modal')
+		document.querySelector(`#modal modalRoles`).innerHTML =
+			`
+				<div class="mt-3">
+					<label class="form-check-label font-weight-bold">
+					<input class="form-check-input" type="checkbox"
+					name="roleAdmin" id="adminCheckbox" readonly>Admin</label>
+				</div>
+			`
+		document.getElementsByClassName(`modal-footer`)[0].innerHTML =
+			`
+				<button class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button class="btn btn-danger">Delete</button>
+			`
+		modal.querySelector('#id').value = user.id
+		modal.querySelector('#id').readOnly = true
+		modal.querySelector('#un').value = user.username
+		modal.querySelector('#un').readOnly = true
+		modal.querySelector('#pw').value = user.password
+		modal.querySelector('#pw').readOnly = true
+		if (user.isAdmin === true) {
+			modal.querySelector('#adminCheckbox').checked = "checked"
+		}
+		modal.querySelector('#adminCheckbox').disabled = true
+		await modalOpen(modal)
+		let buttons = modal.getElementsByTagName('button')
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].addEventListener('click', async () => {
+				if (buttons[i].className === "btn btn-danger") {
+					await deleteUser(id)
+					await modalClose(modal)
+				} else if (buttons[i].className === "btn btn-secondary" ||
+					buttons[i].className === "close") {
+					await modalClose(modal)
+				}
+			})
+		}
+	}
+}
+
+async function deleteUser(id) {
+	if (id !== undefined) {
+		await usersFetch.deleteUser(id)
 			.then(response => {
 				if (response.ok) {
-					modal.querySelector('#close').click()
 					getUsers()
 				}
 			})
 	}
+}
+
+async function modalOpen(modal) {
+	document.getElementsByTagName(`body`)[0].className = "modal-open"
+	modal.className = "modal fade show"
+	modal.ariaHidden = "false"
+	modal.ariaModal = "true"
+	modal.style = "display: block;"
+}
+
+async function modalClose(modal) {
+	delete document.getElementsByTagName(`body`)[0].className
+	modal.className = "modal fade"
+	modal.ariaHidden = "true"
+	modal.ariaModal = "false"
+	modal.style = "display: none;"
 }

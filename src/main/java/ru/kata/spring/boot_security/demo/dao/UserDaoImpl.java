@@ -43,7 +43,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         em.remove(em.find(User.class, id));
+    }
+
+    @Override
+    public User getUserById(long id) {
+        return em.find(User.class, id);
     }
 }

@@ -28,6 +28,11 @@ public class RestController {
 		return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
 	}
 
+	@GetMapping("/users/{id}")
+	public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
+		return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+	}
+
 	@GetMapping("/user")
 	public ResponseEntity<User> getUser(Principal principal) {
 		return new ResponseEntity<>(userService.getUserByUsername(
@@ -35,15 +40,15 @@ public class RestController {
 				HttpStatus.OK);
 	}
 
-	@DeleteMapping("/users/{id}")
-	public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
-		userService.deleteById(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
 	@PostMapping("/users")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
 		userService.save(user);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("/users/{id}")
+	public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
+		userService.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

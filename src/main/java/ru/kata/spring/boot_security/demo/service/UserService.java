@@ -8,5 +8,6 @@ public interface UserService {
     void save(User user);
     void save(User user, boolean adm);
     void update(User user);
-    void deleteById(Long id);
+    void deleteById(long id);
+    User getUserById(long id);
 }

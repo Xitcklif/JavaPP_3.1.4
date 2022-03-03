@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRoles(roles);
 
         if (user.getPassword().equals("")) {
-            user.setPassword(getUserByUsername(user.getUsername()).getPassword());
+            user.setPassword(getUserById(user.getId()).getPassword());
         } else {
             if (getPassErrors(user)) {
                 return;
@@ -130,7 +130,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional(rollbackOn = HibernateException.class)
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         userDao.deleteById(id);
+    }
+
+    @Override
+    public User getUserById(long id) {
+        return userDao.getUserById(id);
     }
 }

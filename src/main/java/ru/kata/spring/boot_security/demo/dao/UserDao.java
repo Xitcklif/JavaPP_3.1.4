@@ -7,5 +7,6 @@ public interface UserDao {
     Iterable<User> getAllUsers();
     void save(User user);
     void update(User user);
-    void deleteById(Long id);
+    void deleteById(long id);
+    User getUserById(long id);
 }

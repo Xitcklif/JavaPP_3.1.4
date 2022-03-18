@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.*;
 
 @Controller
-@RequestMapping("/")
 public class IndexController {
 
-    @GetMapping()
-    public String loginPage() {
-        return "redirect:/login";
+    @GetMapping("/")
+    public String loginPage(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "login";
     }
 
     @GetMapping("/logout")
@@ -23,11 +26,16 @@ public class IndexController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/login";
+        return "login";
     }
 
     @GetMapping("/users")
     public String users() {
         return "users";
+    }
+
+    @GetMapping("/user")
+    public String user() {
+        return "user";
     }
 }

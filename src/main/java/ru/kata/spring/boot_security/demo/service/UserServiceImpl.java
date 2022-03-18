@@ -1,16 +1,15 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.dao.RoleDaoImpl;
 import ru.kata.spring.boot_security.demo.dao.UserDaoImpl;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.model.*;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -18,16 +17,17 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    @Autowired
     private final UserDaoImpl userDao;
-    private final RoleDaoImpl roleDao;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
     public UserServiceImpl(UserDaoImpl userDao,
-                           RoleDaoImpl roleDao,
+                           RoleService roleService,
                            PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
-        this.roleDao = roleDao;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -63,32 +63,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         Set<Role> roles = new HashSet<>();
         if (user.getIsAdmin()) {
-            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
+            roles.add(roleService.getRoleByName("ROLE_ADMIN"));
         }
-        roles.add(roleDao.getRoleByName("ROLE_USER"));
-        user.setRoles(roles);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        userDao.save(user);
-    }
-
-    @Override
-    @Transactional(rollbackOn = HibernateException.class)
-    public void save(User user, boolean adm) {
-
-        if (userDao.getUserByUsername(user.getUsername()) != null ||
-                user.getUsername().length() < 1 ||
-                getPassErrors(user)) {
-            return;
-        }
-
-        Set<Role> roles = new HashSet<>();
-        if (adm) {
-            user.setIsAdmin(true);
-            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
-        }
-        roles.add(roleDao.getRoleByName("ROLE_USER"));
+        roles.add(roleService.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -106,9 +83,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         Set<Role> roles = new HashSet<>();
         if (user.getIsAdmin()) {
-            roles.add(roleDao.getRoleByName("ROLE_ADMIN"));
+            roles.add(roleService.getRoleByName("ROLE_ADMIN"));
         }
-        roles.add(roleDao.getRoleByName("ROLE_USER"));
+        roles.add(roleService.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
         if (user.getPassword().equals("")) {

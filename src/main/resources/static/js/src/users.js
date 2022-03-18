@@ -39,7 +39,13 @@ async function getUsers() {
 							<tr>
 								<td>${user.id}</td>
 								<td>${user.username}</td>
-								<td>${user.roles.map(r => " " + r.name)}</td>
+								<td>${user.roles.map(r => " " + r.name).map(name => {
+							if(name === " ROLE_USER"){
+								return " USER"
+							} else if(name === " ROLE_ADMIN"){
+								return " ADMIN"
+							}
+						})}</td>
 								<td>
 									<buttonEdit class="btn btn-primary" data-toggle="modal" id="${user.id}" href="#modal">Edit</buttonEdit>
 								</td>
@@ -78,14 +84,26 @@ async function getCurrentUser() {
 			<tr>
 				<td>${user.id}</td>
 				<td>${user.username}</td>
-				<td>${user.roles.map(r => " " + r.name)}</td>
+				<td>${user.roles.map(r => " " + r.name).map(name => {
+					if(name === " ROLE_USER"){
+						return " USER"
+					} else if(name === " ROLE_ADMIN"){
+						return " ADMIN"
+					}
+			})}</td>
 			</tr>
 			`
 			document.querySelector('#userTable tbody').innerHTML = temp;
 
 			temp = ``
 			temp += `
-			${user.username} with roles ${user.roles.map(r => " " + r.name)}
+			${user.username} with roles ${user.roles.map(r => " " + r.name).map(name => {
+				if(name === " ROLE_USER"){
+					return " USER"
+				} else if(name === " ROLE_ADMIN"){
+					return " ADMIN"
+				}
+			})}
 			`
 			document.getElementById('userWithRoles').innerHTML = temp
 		})

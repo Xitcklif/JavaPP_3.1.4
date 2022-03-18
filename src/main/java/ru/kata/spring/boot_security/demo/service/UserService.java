@@ -6,7 +6,6 @@ public interface UserService {
     User getUserByUsername(String username);
     Iterable<User> getAllUsers();
     void save(User user);
-    void save(User user, boolean adm);
     void update(User user);
     void deleteById(long id);
     User getUserById(long id);

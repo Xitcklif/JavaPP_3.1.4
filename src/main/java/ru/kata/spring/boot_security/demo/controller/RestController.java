@@ -33,13 +33,6 @@ public class RestController {
 		return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
 	}
 
-	@GetMapping("/user")
-	public ResponseEntity<User> getUser(Principal principal) {
-		return new ResponseEntity<>(userService.getUserByUsername(
-				userDetailsService.loadUserByUsername(principal.getName()).getUsername()),
-				HttpStatus.OK);
-	}
-
 	@PostMapping("/users")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
 		userService.save(user);
@@ -56,5 +49,12 @@ public class RestController {
 	public ResponseEntity<User> editUser(@RequestBody User user) {
 		userService.update(user);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping("/user")
+	public ResponseEntity<User> getUser(Principal principal) {
+		return new ResponseEntity<>(userService.getUserByUsername(
+				userDetailsService.loadUserByUsername(principal.getName()).getUsername()),
+				HttpStatus.OK);
 	}
 }

@@ -26,9 +26,4 @@ public class RoleServiceImpl implements RoleService {
     public void addRoleToTable(Role role) {
         roleDao.save(role);
     }
-
-    @Override
-    public Iterable<Role> getAllRoles() {
-        return roleDao.getAllRoles();
-    }
 }

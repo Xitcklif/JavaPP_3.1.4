@@ -14,10 +14,12 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String username;
     private String password;
     private String confPass;
-    private boolean isAdmin = false;
+    private boolean isAdmin;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
@@ -26,9 +28,7 @@ public class User implements UserDetails {
     }
 
     public User(String username, String password, String confPass) {
-        this.username = username;
-        this.password = password;
-        this.confPass = confPass;
+        this(username, password, confPass, false);
     }
 
     public User(String username, String password, String confPass, boolean isAdmin) {
@@ -70,10 +70,12 @@ public class User implements UserDetails {
         isAdmin = admin;
     }
 
-    @Override
-    public String toString() {
-        return "User{ id = " + id + ", \nusername = " + username + ", password = " + password +
-                ", \nroles = " + roles + '}';
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -86,17 +88,9 @@ public class User implements UserDetails {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override

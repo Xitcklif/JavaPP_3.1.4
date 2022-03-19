@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.hibernate.HibernateException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +16,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    @Autowired
     private final UserDaoImpl userDao;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
@@ -62,10 +60,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         Set<Role> roles = new HashSet<>();
-        if (user.getIsAdmin()) {
-            roles.add(roleService.getRoleByName("ROLE_ADMIN"));
+        String[] rolesList = user.getRolesList().split(" ");
+        for (String role : rolesList) {
+            roles.add(roleService.getRoleByName(role));
         }
-        roles.add(roleService.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -82,10 +80,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         Set<Role> roles = new HashSet<>();
-        if (user.getIsAdmin()) {
-            roles.add(roleService.getRoleByName("ROLE_ADMIN"));
+        String[] rolesList = user.getRolesList().split(" ");
+        for (String role : rolesList) {
+            roles.add(roleService.getRoleByName(role));
         }
-        roles.add(roleService.getRoleByName("ROLE_USER"));
         user.setRoles(roles);
 
         if (user.getPassword().equals("")) {

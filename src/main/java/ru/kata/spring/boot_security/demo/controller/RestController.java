@@ -4,7 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import java.security.Principal;
@@ -15,11 +17,13 @@ import java.util.List;
 public class RestController {
 
 	private final UserServiceImpl userService;
+	private final RoleServiceImpl roleService;
 	private final UserDetailsService userDetailsService;
 
 	public RestController(UserServiceImpl userService,
-						  UserDetailsService userDetailsService) {
+	                      RoleServiceImpl roleService, UserDetailsService userDetailsService) {
 		this.userService = userService;
+		this.roleService = roleService;
 		this.userDetailsService = userDetailsService;
 	}
 
@@ -56,5 +60,10 @@ public class RestController {
 		return new ResponseEntity<>(userService.getUserByUsername(
 				userDetailsService.loadUserByUsername(principal.getName()).getUsername()),
 				HttpStatus.OK);
+	}
+
+	@GetMapping("/roles")
+	public ResponseEntity<List<Role>> getRolesList() {
+		return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
 	}
 }

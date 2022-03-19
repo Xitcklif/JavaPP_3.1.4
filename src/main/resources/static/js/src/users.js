@@ -30,6 +30,7 @@ async function getUsers() {
 	let temp = ``
 	const table = document.querySelector('#usersTable tbody')
 	if (table !== null) {
+		await setRoleList()
 		await fetch("/api/users")
 			.then(response => response.json())
 			.then(users => {
@@ -39,13 +40,8 @@ async function getUsers() {
 							<tr>
 								<td>${user.id}</td>
 								<td>${user.username}</td>
-								<td>${user.roles.map(r => " " + r.name).map(name => {
-							if(name === " ROLE_USER"){
-								return " USER"
-							} else if(name === " ROLE_ADMIN"){
-								return " ADMIN"
-							}
-						})}</td>
+								<td>${user.roles.map(r => " " + r.name)
+							.map(name => name.replace("ROLE_", ""))}</td>
 								<td>
 									<buttonEdit class="btn btn-primary" data-toggle="modal" id="${user.id}" href="#modal">Edit</buttonEdit>
 								</td>
@@ -84,26 +80,15 @@ async function getCurrentUser() {
 			<tr>
 				<td>${user.id}</td>
 				<td>${user.username}</td>
-				<td>${user.roles.map(r => " " + r.name).map(name => {
-					if(name === " ROLE_USER"){
-						return " USER"
-					} else if(name === " ROLE_ADMIN"){
-						return " ADMIN"
-					}
-			})}</td>
+				<td>${user.roles.map(r => " " + r.name)
+				.map(name => name.replace("ROLE_", ""))}</td>
 			</tr>
 			`
 			document.querySelector('#userTable tbody').innerHTML = temp;
 
 			temp = ``
 			temp += `
-			${user.username} with roles ${user.roles.map(r => " " + r.name).map(name => {
-				if(name === " ROLE_USER"){
-					return " USER"
-				} else if(name === " ROLE_ADMIN"){
-					return " ADMIN"
-				}
-			})}
+			${user.username} with roles ${user.roles.map(r => " " + r.name).map(name => name.replace("ROLE_", ""))}
 			`
 			document.getElementById('userWithRoles').innerHTML = temp
 		})
@@ -112,12 +97,20 @@ async function getCurrentUser() {
 async function addUser() {
 	const addButton = document.querySelector('#addUserButton')
 	if (addButton !== null) {
+		const list = document.getElementsByClassName("checkboxList")[0]
+			.getElementsByTagName("input")
 		addButton.addEventListener('click', async () => {
+			let checkedRoles = ""
+			for (let i=0; i < list.length; i++) {
+				if (list[i].checked) {
+					checkedRoles += "ROLE_" + list[i].name + " "
+				}
+			}
 			let addUserData = {
 				username: document.querySelector('#username').value,
 				password: document.querySelector('#password').value,
 				confPass: document.querySelector('#cPassword').value,
-				isAdmin: document.querySelector('#checkboxAdmin').checked
+				rolesList: checkedRoles
 			}
 			if (addUserData.username === "" ||
 				addUserData.password === "" ||
@@ -130,7 +123,9 @@ async function addUser() {
 							document.querySelector('#username').value = ""
 							document.querySelector('#password').value = ""
 							document.querySelector('#cPassword').value = ""
-							document.querySelector('#checkboxAdmin').checked = false
+							for (let i=0; i < list.length; i++) {
+								list[i].checked = false
+							}
 							getUsers()
 							document.querySelector('#all-users-tab').click()
 						}
@@ -142,25 +137,32 @@ async function addUser() {
 
 async function editUserModal(id) {
 	if (id !== undefined) {
+		let temp = `<div class="form-group">
+						<label class="font-weight-bold mb-0" for="cpw">Confirm password</label>
+						<div class="d-flex justify-content-center">
+							<input type="text" class="form-control w-50" id="cpw" name="confPass">
+						</div>
+					</div>
+					<div class="form-group d-flex justify-content-center">
+						<div class="modalRolesCheckbox" style="width:120px; height:62px; overflow:auto; border:solid 1px #ccd2d9;">`
 		document.querySelector(`#modal h5`).textContent = "Edit user"
 		const user = await fetch(`/api/users/${id}`)
 			.then(response => response.json())
 		let modal = document.querySelector('#modal')
-		document.querySelector(`#modal modalRoles`).innerHTML =
-			`
-				<div class="form-group">
-					<label class="font-weight-bold mb-0" for="cpw">Confirm password</label>
-					<div class="d-flex justify-content-center">
-						<input type="text" class="form-control w-50" id="cpw" name="confPass">
-					</div>
-				</div>
-
-				<div class="mt-3">
-					<label class="form-check-label font-weight-bold">
-					<input class="form-check-input" type="checkbox"
-					name="roleAdmin" id="adminCheckbox">Admin</label>
-				</div>
-			`
+		await fetch("/api/roles")
+			.then(response => response.json())
+			.then(roles => {
+				roles.forEach(role => {
+					temp +=
+						`
+						<div><input type="checkbox" name="${role.name.replace("ROLE_", "")}">
+							${role.name.replace("ROLE_", "")}
+						</input></div>
+						`
+				})
+			})
+		temp += `</div></div>`
+		document.querySelector(`#modal modalRoles`).innerHTML = temp
 		document.getElementsByClassName(`modal-footer`)[0].innerHTML =
 			`
 				<button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -169,9 +171,19 @@ async function editUserModal(id) {
 		modal.querySelector('#id').value = user.id
 		modal.querySelector('#id').readOnly = true
 		modal.querySelector('#un').value = user.username
-		if (user.isAdmin === true) {
-			modal.querySelector('#adminCheckbox').checked = "checked"
+
+		let rolesListFromUser = user.roles.map(r => r.name)
+			.map(name => name.replace("ROLE_", ""))
+		let modalRolesCheckbox = modal.getElementsByClassName('modalRolesCheckbox')[0]
+			.getElementsByTagName('input')
+		for (let i=0; i<modalRolesCheckbox.length; i++) {
+			for (let j=0; j<rolesListFromUser.length; j++) {
+				if(modalRolesCheckbox[i].name === rolesListFromUser[j]) {
+					modalRolesCheckbox[i].checked = "checked"
+				}
+			}
 		}
+
 		let buttons = modal.getElementsByTagName('button')
 		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].addEventListener('click', async () => {
@@ -189,13 +201,21 @@ async function editUserModal(id) {
 
 async function editUser(id) {
 	if (id !== undefined) {
+		const list = document.getElementsByClassName("modalRolesCheckbox")[0]
+			.getElementsByTagName("input")
+		let checkedRoles = ""
+		for (let i=0; i < list.length; i++) {
+			if (list[i].checked) {
+				checkedRoles += "ROLE_" + list[i].name + " "
+			}
+		}
 		let modal = document.querySelector('#modal')
 		let editUser = {
 			id: modal.querySelector('#id').value,
 			username: modal.querySelector('#un').value,
 			password: modal.querySelector('#pw').value,
 			confPass: modal.querySelector('#cpw').value,
-			isAdmin: modal.querySelector('#adminCheckbox').checked
+			rolesList: checkedRoles
 		}
 		await usersFetch.editUser(editUser)
 			.then(response => {
@@ -214,10 +234,11 @@ async function deleteUserModal(id) {
 		let modal = document.querySelector('#modal')
 		document.querySelector(`#modal modalRoles`).innerHTML =
 			`
-				<div class="mt-3">
-					<label class="form-check-label font-weight-bold">
-					<input class="form-check-input" type="checkbox"
-					name="roleAdmin" id="adminCheckbox" readonly>Admin</label>
+				<div class="form-group">
+					<label class="font-weight-bold mb-0" for="rolesList">Roles</label>
+					<div class="d-flex justify-content-center">
+						<input type="text" class="form-control w-50" id="rolesList">
+					</div>
 				</div>
 			`
 		document.getElementsByClassName(`modal-footer`)[0].innerHTML =
@@ -231,10 +252,10 @@ async function deleteUserModal(id) {
 		modal.querySelector('#un').readOnly = true
 		modal.querySelector('#pw').value = user.password
 		modal.querySelector('#pw').readOnly = true
-		if (user.isAdmin === true) {
-			modal.querySelector('#adminCheckbox').checked = "checked"
-		}
-		modal.querySelector('#adminCheckbox').disabled = true
+		modal.querySelector('#rolesList').value = user.roles
+			.map(r => " " + r.name)
+			.map(name => name.replace("ROLE_", ""))
+		modal.querySelector('#rolesList').readOnly = true
 		let buttons = modal.getElementsByTagName('button')
 		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].addEventListener('click', async () => {
@@ -266,4 +287,24 @@ async function clearModal(modal) {
 	modal.querySelector('#pw').readOnly = false
 	modal.querySelector('#pw').value = ""
 	modal.querySelector('#cpw').value = ""
+}
+
+async function setRoleList() {
+	let rolesList = ``
+	const list = document.getElementsByClassName("checkboxList")[0]
+	if (list !== null) {
+		await fetch("/api/roles")
+			.then(response => response.json())
+			.then(roles => {
+				roles.forEach(role => {
+					rolesList +=
+						`
+						<div><input type="checkbox" name="${role.name.replace("ROLE_", "")}">
+							${role.name.replace("ROLE_", "")}
+						</input></div>
+						`
+				})
+			})
+		list.innerHTML = rolesList
+	}
 }

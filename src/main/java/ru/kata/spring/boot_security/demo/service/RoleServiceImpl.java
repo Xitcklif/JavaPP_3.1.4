@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.dao.RoleDaoImpl;
 import ru.kata.spring.boot_security.demo.model.Role;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -25,5 +26,10 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackOn = HibernateException.class)
     public void addRoleToTable(Role role) {
         roleDao.save(role);
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return roleDao.getAllRoles();
     }
 }

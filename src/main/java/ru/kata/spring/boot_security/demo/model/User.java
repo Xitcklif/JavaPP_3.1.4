@@ -19,7 +19,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String confPass;
-    private boolean isAdmin;
+    private String rolesList;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
@@ -28,14 +28,14 @@ public class User implements UserDetails {
     }
 
     public User(String username, String password, String confPass) {
-        this(username, password, confPass, false);
+        this(username, password, confPass, "ROLE_USER");
     }
 
-    public User(String username, String password, String confPass, boolean isAdmin) {
+    public User(String username, String password, String confPass, String rolesList) {
         this.username = username;
         this.password = password;
         this.confPass = confPass;
-        this.isAdmin = isAdmin;
+        this.rolesList = rolesList;
     }
 
     public Long getId() {
@@ -62,12 +62,12 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public boolean getIsAdmin() {
-        return isAdmin;
+    public String getRolesList() {
+        return rolesList;
     }
 
-    public void setIsAdmin(boolean admin) {
-        isAdmin = admin;
+    public void setRolesList(String rolesList) {
+        this.rolesList = rolesList;
     }
 
     public void setPassword(String password) {

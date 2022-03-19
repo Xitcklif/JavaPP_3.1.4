@@ -32,7 +32,7 @@ public class StartInit {
         Role readerRole = new Role("ROLE_READER");
         roleService.addRoleToTable(readerRole);
 
-        User root = new User("root", "root", "root", true);
+        User root = new User("root", "root", "root", "ROLE_USER ROLE_ADMIN");
         userService.save(root);
 
         User user = new User("user", "user", "user");
